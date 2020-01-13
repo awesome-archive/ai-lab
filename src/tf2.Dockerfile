@@ -1,6 +1,6 @@
 # Base image built from `base.Dockerfile`
 
-FROM nvaitc/ai-lab:19.10-base
+FROM nvaitc/ai-lab:20.01-base
 
 LABEL maintainer="Timothy Liu <timothyl@nvidia.com>"
 
@@ -13,11 +13,11 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 USER root
 
-ENV TRT_VERSION 6.0.1-1+cuda10.0
+ENV TRT_VERSION 6.0.1-1+cuda10.1
 
 RUN apt-get update && \
     apt-get install -yq --no-upgrade \
-      libcudnn7-dev=${CUDNN_VERSION}-1+cuda10.0 \
+      libcudnn7-dev=${CUDNN_VERSION}-1+cuda10.1 \
       protobuf-compiler \
       libnvinfer6=${TRT_VERSION} libnvonnxparsers6=${TRT_VERSION} \
       libnvparsers6=${TRT_VERSION} libnvinfer-plugin6=${TRT_VERSION} \
@@ -38,13 +38,16 @@ RUN cd $HOME/ && \
       'python=3.6' \
       'numpy=1.16.1' \
       'pytorch' \
-      'cudatoolkit=10.0' && \
+      'cudatoolkit=10.1' && \
     echo -c "Downloading ${TENSORFLOW_FILENAME} from ${TENSORFLOW_URL}" && \
     wget -O ${TENSORFLOW_FILENAME} ${TENSORFLOW_URL} && \
     pip install --no-cache-dir --ignore-installed PyYAML \
+      tensorflow-io \
+      tensorflow-addons \
       tensorflow_datasets \
       tensorflow-hub \
       tensorflow-probability \
+      keras-tuner \
       tensorflow-model-optimization \
       && \
     pip uninstall tensorflow tensorflow-gpu -y && \
@@ -111,13 +114,13 @@ RUN apt-get update && \
       cuda-command-line-tools-$CUDA_PKG_VERSION \
       cuda-libraries-dev-$CUDA_PKG_VERSION \
       cuda-minimal-build-$CUDA_PKG_VERSION \
-      libnccl-dev=$NCCL_VERSION-1+cuda10.0 && \
+      libnccl-dev=$NCCL_VERSION-1+cuda10.1 && \
     pip install --no-cache-dir horovod && \
     apt-get remove -yq \
       cuda-nvml-dev-$CUDA_PKG_VERSION \
       cuda-command-line-tools-$CUDA_PKG_VERSION \
       cuda-libraries-dev-$CUDA_PKG_VERSION \
-      libnccl-dev=$NCCL_VERSION-1+cuda10.0 && \
+      libnccl-dev=$NCCL_VERSION-1+cuda10.1 && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/* && \

@@ -1,7 +1,7 @@
 # builds the extended container
 # with VNC and VS Code dev environments
 
-FROM nvaitc/ai-lab:19.10
+FROM nvaitc/ai-lab:20.01
 
 LABEL maintainer="Timothy Liu <timothyl@nvidia.com>"
 
@@ -22,11 +22,10 @@ ENV CONDA_DIR=/opt/conda \
 
 ENV PATH=$CONDA_DIR/bin:$PATH \
     HOME=/home/$NB_USER \
-    TURBOVNC_VERSION=2.2.2 \
-    VIRTUALGL_VERSION=2.6.2 \
-    LIBJPEG_VERSION=2.0.2 \
-    WEBSOCKIFY_VERSION=0.8.0 \
-    NOVNC_VERSION=1.1.0 \
+    TURBOVNC_VERSION=2.2.3 \
+    VIRTUALGL_VERSION=2.6.3 \
+    LIBJPEG_VERSION=2.0.3 \
+    WEBSOCKIFY_VERSION=0.9.0 \
     LIBGLVND_VERSION=master
 
 COPY xorg.conf.nvidia-headless /etc/X11/xorg.conf
@@ -66,6 +65,9 @@ RUN apt-get update && \
     cd && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+
+# to double check
+ENV PATH /opt/nvidia/nsight-compute/2019.5.0:{${PATH}
 
 WORKDIR /opt/
 
@@ -109,8 +111,7 @@ RUN apt-get update && \
     cd /tmp && \
     curl -fsSL -O https://svwh.dl.sourceforge.net/project/turbovnc/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_amd64.deb \
         -O https://svwh.dl.sourceforge.net/project/libjpeg-turbo/${LIBJPEG_VERSION}/libjpeg-turbo-official_${LIBJPEG_VERSION}_amd64.deb \
-        -O https://svwh.dl.sourceforge.net/project/virtualgl/${VIRTUALGL_VERSION}/virtualgl_${VIRTUALGL_VERSION}_amd64.deb \
-        -O https://svwh.dl.sourceforge.net/project/virtualgl/${VIRTUALGL_VERSION}/virtualgl32_${VIRTUALGL_VERSION}_amd64.deb && \
+        -O https://svwh.dl.sourceforge.net/project/virtualgl/${VIRTUALGL_VERSION}/virtualgl_${VIRTUALGL_VERSION}_amd64.deb && \
     dpkg -i *.deb && \
     sed -i 's/$host:/unix:/g' /opt/TurboVNC/bin/vncserver && \
     apt-get autoremove -y && \
